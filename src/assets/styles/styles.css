@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #009FE0;
+  --secondary: #F6F5F4;
+  --tertiary: #333;
+  --white: #FFF;
+  --black: #000;
+  --gray-dark: #757575;
+  --red-light: #FF0000B2;
+  --green-light: #008000B2;
+}
+
+body {
+  /* font-family: 'Dela Gothic One', sans-serif;
+  font-family: 'Poppins', sans-serif; */
+  font-family: 'Montserrat', sans-serif;
+
+  background-color: var(--secondary);
+  color: var(--black);
+}
