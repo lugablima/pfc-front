@@ -26,3 +26,20 @@ export async function signInUserOrFail(userData: ISignInUser) {
     }
   }
 }
+
+export async function signUpUserOrFail(userData: ISignUpUser) {
+  try {
+    const response: AxiosResponse<string> = await api.post(
+      "/sign-up",
+      userData,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    } else {
+      throw "Algum erro ocorreu, por favor, tente novamente mais tarde!";
+    }
+  }
+}
