@@ -35,13 +35,33 @@ export async function getAll(token: string, moduleId: string) {
   }
 }
 
-export type TCreateClassPayload = Omit<
-  IClass,
-  "id" | "isEnabled" | "moduleId"
-> & {
+export type TCreateClassPayload = Omit<IClass, "id" | "isEnabled"> & {
   videoUrl: string;
   summaryUrl: string;
 };
+
+export async function create(token: string, data: TCreateClassPayload) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response: AxiosResponse<string> = await api.post(
+      `/classes`,
+      data,
+      config,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    } else {
+      throw "Algum erro ocorreu, por favor, recarregue a página!";
+    }
+  }
 }
 
 export async function enableOrDisableOne(

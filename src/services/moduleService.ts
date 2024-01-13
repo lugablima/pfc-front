@@ -40,7 +40,7 @@ export type TCreateModulePayload = Omit<
   IModule,
   "id" | "createdAt" | "isEnabled"
 > & {
-  classes: TCreateClassPayload[];
+  classes: Omit<TCreateClassPayload, "moduleId">[];
 };
 
 export async function create(token: string, data: TCreateModulePayload) {

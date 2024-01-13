@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Label = styled.h5<{ $mb?: number }>`
+const Label = styled.h5<{ $mb?: string }>`
   color: var(--black);
   font-family: Dela Gothic One;
   font-size: 1.5rem;
@@ -8,7 +8,7 @@ const Label = styled.h5<{ $mb?: number }>`
   font-weight: 400;
   letter-spacing: -0.06rem;
   text-align: left;
-  margin-bottom: ${(props) => (props.$mb ? `${props.$mb}rem` : "0.75rem")};
+  margin-bottom: ${(props) => (props.$mb ? props.$mb : "0.75rem")};
 `;
 
 const Input = styled.input<{ $w?: number; $mb?: number }>`

@@ -82,7 +82,11 @@ export default function Classes() {
               $textColor="#F6F5F4"
               text="Nova aula"
               $margin="0 0 3rem 0"
-              onClick={() => navigate("/new-class")}
+              onClick={() =>
+                navigate(`/modules/${params.moduleId}/new-class`, {
+                  state: { moduleName },
+                })
+              }
             />
           )}
         </Header>

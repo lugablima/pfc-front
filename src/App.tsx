@@ -11,6 +11,7 @@ import Modules from "./pages/Modules";
 import UserProvider from "./contexts/UserContext";
 import NewModule from "./pages/NewModule";
 import Classes from "./pages/Classes";
+import NewClass from "./pages/NewClass";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/new-module" Component={NewModule} />
           <Route path="/edit-module" Component={NewModule} />
           <Route path="/modules/:moduleId/classes" Component={Classes} />
+          <Route path="/modules/:moduleId/new-class" Component={NewClass} />
           <Route path="/classes/:classId/video" Component={NewModule} />
           <Route path="/dashboard" Component={NewModule} />
         </Routes>
