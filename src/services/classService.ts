@@ -9,7 +9,7 @@ export interface IClass {
   imageUrl: string;
   isEnabled: boolean;
   moduleId: string;
-  dueDate: Date;
+  dueDate: string;
 }
 
 export async function getAll(token: string, moduleId: string) {
@@ -35,8 +35,13 @@ export async function getAll(token: string, moduleId: string) {
   }
 }
 
-export async function create() {
-  //
+export type TCreateClassPayload = Omit<
+  IClass,
+  "id" | "isEnabled" | "moduleId"
+> & {
+  videoUrl: string;
+  summaryUrl: string;
+};
 }
 
 export async function enableOrDisableOne(

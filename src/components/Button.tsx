@@ -9,6 +9,7 @@ interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   $bgColor: string;
   text: string;
   $margin?: string;
+  $borderRadius?: number;
   onClick?: () => void;
 }
 
@@ -19,6 +20,7 @@ export default function Button({
   $textColor,
   $bgColor,
   $margin,
+  $borderRadius,
   onClick,
 }: IButton) {
   return (
@@ -28,6 +30,7 @@ export default function Button({
       $textColor={$textColor}
       $bgColor={$bgColor}
       $margin={$margin}
+      $borderRadius={$borderRadius}
       onClick={() => onClick?.()}
     >
       {text}
@@ -38,7 +41,8 @@ export default function Button({
 const Container = styled.button<Omit<IButton, "text">>`
   width: ${(props) => `${props.$w}rem`};
   height: ${(props) => `${props.$h}rem`};
-  border-radius: 6.25rem;
+  border-radius: ${(props) =>
+    props.$borderRadius ? `${props.$borderRadius}rem` : "6.25rem"};
   border: 3px solid ${(props) => props.$bgColor};
   background: ${(props) => props.$bgColor};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);

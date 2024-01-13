@@ -2,6 +2,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import api from "./api";
+import { TCreateClassPayload } from "./classService";
 
 export interface IModule {
   id: string;
@@ -35,8 +36,35 @@ export async function getAll(token: string) {
   }
 }
 
-export async function create() {
-  //
+export type TCreateModulePayload = Omit<
+  IModule,
+  "id" | "createdAt" | "isEnabled"
+> & {
+  classes: TCreateClassPayload[];
+};
+
+export async function create(token: string, data: TCreateModulePayload) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response: AxiosResponse<string> = await api.post(
+      `/modules`,
+      data,
+      config,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    } else {
+      throw "Algum erro ocorreu, por favor, recarregue a página!";
+    }
+  }
 }
 
 export async function enableOrDisableOne(
