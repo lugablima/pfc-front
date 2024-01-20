@@ -11,6 +11,7 @@ interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   $margin?: string;
   $borderRadius?: number;
   onClick?: () => void;
+  type?: "button" | "reset" | "submit" | undefined;
 }
 
 export default function Button({
@@ -22,6 +23,7 @@ export default function Button({
   $margin,
   $borderRadius,
   onClick,
+  type,
 }: IButton) {
   return (
     <Container
@@ -32,6 +34,7 @@ export default function Button({
       $margin={$margin}
       $borderRadius={$borderRadius}
       onClick={() => onClick?.()}
+      type={type || "button"}
     >
       {text}
     </Container>
