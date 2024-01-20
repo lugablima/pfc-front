@@ -49,11 +49,7 @@ export default function Modules() {
           description={m.description}
           imageUrl={m.imageUrl}
           isEnabled={m.isEnabled}
-          onClick={() =>
-            navigate(`/modules/${m.id}/classes`, {
-              state: { moduleName: m.name },
-            })
-          }
+          onClick={() => navigate(`/modules/${m.id}/classes`)}
           updateEntity={() => updateModules()}
         />
       );

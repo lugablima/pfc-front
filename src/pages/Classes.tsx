@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PageContainer from "../layouts/PageContainer";
 import Card from "../components/Card";
@@ -10,14 +10,11 @@ import checkUserAccess from "../hooks/useCheckUserAccess";
 import * as classService from "../services/classService";
 
 export default function Classes() {
-  const [classes, setClasses] = useState<classService.IClass[]>([]);
+  const [classes, setClasses] = useState<classService.TGetAllClasses[]>([]);
   const [update, setUpdate] = useState<boolean>(false);
   const { user } = useUserContext() as IUserContext;
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string }>();
-  const {
-    state: { moduleName },
-  } = useLocation();
 
   function updateClasses() {
     setUpdate(!update);
@@ -82,15 +79,11 @@ export default function Classes() {
               $textColor="#F6F5F4"
               text="Nova aula"
               $margin="0 0 3rem 0"
-              onClick={() =>
-                navigate(`/modules/${params.moduleId}/new-class`, {
-                  state: { moduleName },
-                })
-              }
+              onClick={() => navigate(`/modules/${params.moduleId}/new-class`)}
             />
           )}
         </Header>
-        <h5>Aulas • {moduleName}</h5>
+        <h5>Aulas • {classes.length && classes[0].module.name}</h5>
         {classes.length > 0 && renderClasses()}
       </Content>
     </PageContainer>
