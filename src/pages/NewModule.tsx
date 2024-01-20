@@ -42,10 +42,17 @@ export default function NewModule() {
     videoUrl: "",
     summaryUrl: "",
     dueDate: "",
-    exerciseFile: "",
+    exerciseFile: {
+      name: "",
+      size: 0,
+      value: "",
+      content: "",
+    },
   };
   const [module, setModule] = useState<TModule>({ ...defaultModule });
-  const [classes, setClasses] = useState<IClasses[]>([{ ...defaultClass }]);
+  const [classes, setClasses] = useState<IClasses[]>([
+    { ...defaultClass, exerciseFile: { ...defaultClass.exerciseFile } },
+  ]);
   const navigate = useNavigate();
   const { user } = useUserContext() as IUserContext;
 
@@ -69,6 +76,7 @@ export default function NewModule() {
         videoUrl: _class.videoUrl,
         summaryUrl: _class.summaryUrl,
         dueDate: _class.dueDate,
+        exerciseFile: _class.exerciseFile,
       })),
     };
 
@@ -76,7 +84,9 @@ export default function NewModule() {
       await moduleService.create(user?.token as string, body);
 
       setModule({ ...defaultModule });
-      setClasses([{ ...defaultClass }]);
+      setClasses([
+        { ...defaultClass, exerciseFile: { ...defaultClass.exerciseFile } },
+      ]);
       navigate("/modules");
     } catch (error) {
       alert(error);
@@ -137,12 +147,21 @@ export default function NewModule() {
               index={index}
               _class={_class}
               updateClass={updateClass}
+              isCreating
             />
           ))}
 
         <Flex $w={31.25} $flexDirection="column" $justifyContent="flex-start">
           <PlusButton
-            onClick={() => setClasses([...classes, { ...defaultClass }])}
+            onClick={() =>
+              setClasses([
+                ...classes,
+                {
+                  ...defaultClass,
+                  exerciseFile: { ...defaultClass.exerciseFile },
+                },
+              ])
+            }
           >
             +
           </PlusButton>
