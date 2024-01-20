@@ -20,7 +20,12 @@ export interface IClasses {
   imageUrl: string;
   videoUrl: string;
   summaryUrl: string;
-  exerciseFile: string;
+  exerciseFile: {
+    name: string;
+    size: number;
+    value: string;
+    content: string;
+  };
   dueDate: string;
 }
 

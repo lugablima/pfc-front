@@ -10,7 +10,14 @@ export interface IClass {
   isEnabled: boolean;
   moduleId: string;
   dueDate: string;
+  videoUrl: string;
+  summaryUrl: string;
+  module: {
+    name: string;
+  };
 }
+
+export type TGetAllClasses = Omit<IClass, "videoUrl" | "summaryUrl">;
 
 export async function getAll(token: string, moduleId: string) {
   try {
@@ -20,7 +27,7 @@ export async function getAll(token: string, moduleId: string) {
       },
     };
 
-    const response: AxiosResponse<IClass[]> = await api.get(
+    const response: AxiosResponse<TGetAllClasses[]> = await api.get(
       `/classes/${moduleId}`,
       config,
     );
@@ -35,9 +42,67 @@ export async function getAll(token: string, moduleId: string) {
   }
 }
 
-export type TCreateClassPayload = Omit<IClass, "id" | "isEnabled"> & {
-  videoUrl: string;
-  summaryUrl: string;
+interface ITest {
+  id: string;
+  inputs: string[];
+  result: string[];
+}
+
+interface IExercise {
+  id: string;
+  name: string;
+  sequence: number;
+  statement: string;
+  test: ITest[];
+}
+
+export interface IGetClassInfosForEdit {
+  id: string;
+  name: string;
+  imageUrl: string;
+  dueDate: string;
+  video: {
+    url: string;
+  };
+  summary: {
+    url: string;
+  };
+  exercises: IExercise[];
+}
+
+export async function getInfosForEdit(token: string, classId: string) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response: AxiosResponse<IGetClassInfosForEdit> = await api.get(
+      `/classes/${classId}/edit`,
+      config,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    } else {
+      throw "Algum erro ocorreu, por favor, recarregue a página!";
+    }
+  }
+}
+
+export type TCreateClassPayload = Omit<
+  IClass,
+  "id" | "isEnabled" | "module"
+> & {
+  exerciseFile: {
+    name: string;
+    size: number;
+    value: string;
+    content: string;
+  };
 };
 
 export async function create(token: string, data: TCreateClassPayload) {
@@ -50,6 +115,34 @@ export async function create(token: string, data: TCreateClassPayload) {
 
     const response: AxiosResponse<string> = await api.post(
       `/classes`,
+      data,
+      config,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    } else {
+      throw "Algum erro ocorreu, por favor, recarregue a página!";
+    }
+  }
+}
+
+export async function edit(
+  token: string,
+  classId: string,
+  data: TCreateClassPayload,
+) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response: AxiosResponse<string> = await api.put(
+      `/classes/${classId}`,
       data,
       config,
     );
