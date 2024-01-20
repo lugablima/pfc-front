@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 interface IMenuDropProps {
+  id: string;
   type: "módulo" | "aula";
   isEnabled: boolean;
   enableOrDisableOne: () => Promise<void>;
@@ -9,12 +10,14 @@ interface IMenuDropProps {
 }
 
 export default function MenuDrop({
+  id,
   type,
   isEnabled,
   enableOrDisableOne,
   deleteOne,
 }: IMenuDropProps) {
   const navigate = useNavigate();
+  const params = useParams<{ moduleId: string }>();
 
   function callFn(
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -29,6 +32,16 @@ export default function MenuDrop({
     }
   }
 
+  function redirectToEditPage(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    e.stopPropagation();
+
+    if (type === "módulo") {
+      navigate(`/modules/${id}/edit`);
+    } else {
+      navigate(`/modules/${params.moduleId}/classes/${id}/edit`);
+    }
+  }
+
   return (
     <Container>
       <Option onClick={(e) => callFn(e, "enable")}>
@@ -39,7 +52,7 @@ export default function MenuDrop({
       <Separator>
         <div />
       </Separator>
-      <Option onClick={() => navigate("/edit-module")}>
+      <Option onClick={(e) => redirectToEditPage(e)}>
         <h6>Editar {type}</h6>
       </Option>
       <Separator>

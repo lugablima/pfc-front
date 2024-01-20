@@ -97,6 +97,7 @@ export default function Card({
       </Content>
       {showMenu && (
         <MenuDrop
+          id={id}
           type={type}
           isEnabled={isEnabled}
           enableOrDisableOne={() => enableOrDisableOne()}

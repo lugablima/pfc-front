@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import styled from "styled-components";
 import { FormEvent, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import PageContainer from "../layouts/PageContainer";
 import Button from "../components/Button";
@@ -28,6 +28,7 @@ import fileIcon from "../assets/images/file-icon.svg";
 import garbageIcon from "../assets/images/garbage-icon.svg";
 import infoIcon from "../assets/images/info-icon.svg";
 import { IClasses } from "./NewModule";
+import validateJSONStructure from "../utils/validateJsonFile";
 
 export default function NewClass() {
   const defaultClass = {
@@ -36,17 +37,21 @@ export default function NewClass() {
     videoUrl: "",
     summaryUrl: "",
     dueDate: "",
-    exerciseFile: "",
+    exerciseFile: {
+      name: "",
+      size: 0,
+      value: "",
+      content: "",
+    },
   };
 
-  const [_class, setClass] = useState<IClasses>({ ...defaultClass });
+  const [_class, setClass] = useState<IClasses>({
+    ...defaultClass,
+    exerciseFile: { ...defaultClass.exerciseFile },
+  });
   const [toggleInfoBox, setToggleInfoBox] = useState<boolean>(false);
-  const [exerciseFile, setExerciseFile] = useState<File>();
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string }>();
-  const {
-    state: { moduleName },
-  } = useLocation();
   const { user } = useUserContext() as IUserContext;
 
   useEffect(() => {
@@ -58,13 +63,41 @@ export default function NewClass() {
   }
 
   function onChangeFile(e: any) {
-    setExerciseFile(e.target.files[0]);
-    setClass({ ..._class, exerciseFile: e.target.value });
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target?.result as string);
+
+          if (!validateJSONStructure(data)) {
+            alert(
+              "A estrutura do JSON está inválida, por favor, faça o upload de um novo arquivo!",
+            );
+            return;
+          }
+
+          setClass({
+            ..._class,
+            exerciseFile: {
+              name: file.name,
+              size: file.size,
+              value: file.name,
+              content: JSON.stringify(data),
+            },
+          });
+        } catch (error) {
+          console.error("Erro ao analisar o arquivo JSON:", error);
+        }
+      };
+
+      reader.readAsText(file);
+    }
   }
 
   function cleanUpFile() {
-    setExerciseFile(undefined);
-    setClass({ ..._class, exerciseFile: "" });
+    setClass({ ..._class, exerciseFile: { ...defaultClass.exerciseFile } });
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -77,15 +110,17 @@ export default function NewClass() {
       summaryUrl: _class.summaryUrl,
       dueDate: _class.dueDate,
       moduleId: params.moduleId as string,
+      exerciseFile: _class.exerciseFile,
     };
 
     try {
       await classService.create(user?.token as string, body);
 
-      setClass({ ...defaultClass });
-      navigate(`/modules/${params.moduleId}/classes`, {
-        state: { moduleName },
+      setClass({
+        ...defaultClass,
+        exerciseFile: { ...defaultClass.exerciseFile },
       });
+      navigate(`/modules/${params.moduleId}/classes`);
     } catch (error) {
       alert(error);
     }
@@ -165,21 +200,21 @@ export default function NewClass() {
           id="exercise-file"
           type="file"
           accept=".json"
-          value={_class.exerciseFile}
           onChange={(e) => onChangeFile(e)}
+          readOnly
           hidden
           required
         />
         <Flex $w={26.25} $justifyContent="flex-end">
-          <FileButton onClick={() => selectFile()}>
+          <FileButton onClick={() => selectFile()} type="button">
             Selecionar arquivo
           </FileButton>
         </Flex>
-        {exerciseFile && (
+        {_class.exerciseFile.name && (
           <FileBox>
             <img src={fileIcon} alt="File icon" />
             <h6>
-              {exerciseFile?.name} ({exerciseFile?.size}b)
+              {_class.exerciseFile?.name} ({_class.exerciseFile?.size}b)
             </h6>
             <img
               src={garbageIcon}
