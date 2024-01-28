@@ -14,12 +14,14 @@ import Classes from "./pages/Classes";
 import NewClass from "./pages/NewClass";
 import EditModule from "./pages/EditModule";
 import EditClass from "./pages/EditClass";
+import ExercisesProvider from "./contexts/ExercisesContext";
 import Video from "./pages/Video";
 import Summary from "./pages/Summary";
 
 function App() {
   return (
     <UserProvider>
+      <ExercisesProvider>
               <Route
                 path="/modules/:moduleId/classes/:classId/video"
                 Component={Video}
@@ -28,6 +30,7 @@ function App() {
                 path="/modules/:moduleId/classes/:classId/summary"
                 Component={Summary}
               />
+      </ExercisesProvider>
     </UserProvider>
   );
 }

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-throw-literal */
 import axios, { AxiosResponse } from "axios";
 
 import api from "./api";
+import { IExercises } from "../contexts/ExercisesContext";
 
 export interface IClass {
   id: string;
@@ -42,10 +44,12 @@ export async function getAll(token: string, moduleId: string) {
   }
 }
 
-interface ITest {
+export interface ITest {
   id: string;
-  inputs: string[];
-  result: string[];
+  inputs: any;
+  inputDataType: string;
+  result: any;
+  resultDataType: string;
 }
 
 interface IExercise {
@@ -80,6 +84,29 @@ export async function getInfosForEdit(token: string, classId: string) {
 
     const response: AxiosResponse<IGetClassInfosForEdit> = await api.get(
       `/classes/${classId}/edit`,
+      config,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    } else {
+      throw "Algum erro ocorreu, por favor, recarregue a página!";
+    }
+  }
+}
+
+export async function getAllExercises(token: string, classId: string) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response: AxiosResponse<IExercises[]> = await api.get(
+      `/classes/${classId}/exercises`,
       config,
     );
 
