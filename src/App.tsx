@@ -15,6 +15,7 @@ import NewClass from "./pages/NewClass";
 import EditModule from "./pages/EditModule";
 import EditClass from "./pages/EditClass";
 import Video from "./pages/Video";
+import Summary from "./pages/Summary";
 
 function App() {
   return (
@@ -22,6 +23,10 @@ function App() {
               <Route
                 path="/modules/:moduleId/classes/:classId/video"
                 Component={Video}
+              />
+              <Route
+                path="/modules/:moduleId/classes/:classId/summary"
+                Component={Summary}
               />
     </UserProvider>
   );
