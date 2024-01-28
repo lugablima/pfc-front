@@ -51,7 +51,9 @@ export default function Classes() {
           moduleName={c.name}
           imageUrl={c.imageUrl}
           isEnabled={c.isEnabled}
-          onClick={() => navigate(`/classes/${c.id}/video`)}
+          onClick={() =>
+            navigate(`/modules/${params.moduleId}/classes/${c.id}/video`)
+          }
           updateEntity={() => updateClasses()}
         />
       );
