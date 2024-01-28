@@ -4,14 +4,45 @@ import Button from "./Button";
 import { IModalContext, useModalContext } from "../contexts/ModalContext";
 
 export default function CustomModal() {
-  const { isModalOpen, setIsModalOpen, handleCancelClick, handleSendClick } =
-    useModalContext() as IModalContext;
+  const {
+    isModalOpen,
+    modalInfos,
+    setIsModalOpen,
+    handleCancelClick,
+    handleSendClick,
+  } = useModalContext() as IModalContext;
+
+  const customStyles: Modal.Styles = {
+    content: {
+      width: "23.5rem",
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      borderRadius: "0.25rem",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.70)",
+      position: "fixed",
+      top: "0",
+      left: "0",
+      zIndex: "2",
+    },
+  };
 
   Modal.setAppElement("#root");
 
   return (
-    <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-      <Text>O exercício passou em 100% dos testes</Text>
+    <Modal
+      isOpen={isModalOpen}
+      onRequestClose={() => setIsModalOpen(false)}
+      style={customStyles}
+    >
+      <Text>
+        O exercício passou em {modalInfos?.resolution.grade}% dos testes
+      </Text>
       <Text>Gostaria de enviar a resolução?</Text>
       <ButtonsContainer>
         <Button

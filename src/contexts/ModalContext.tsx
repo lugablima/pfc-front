@@ -20,6 +20,7 @@ export interface IModalInfos {
 
 export interface IModalContext {
   isModalOpen: boolean;
+  modalInfos: IModalInfos | null;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   handleOpenModal: (modalProps: IModalInfos) => void;
   handleCancelClick: () => void;
@@ -70,6 +71,7 @@ export default function ModalProvider({ children }: Props) {
     <ModalContext.Provider
       value={{
         isModalOpen,
+        modalInfos,
         setIsModalOpen,
         handleOpenModal,
         handleCancelClick,
