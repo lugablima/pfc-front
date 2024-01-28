@@ -35,12 +35,10 @@ const validateJSONStructure = (jsonData: any): jsonData is JSONStructure => {
     for (const test of exercise.tests) {
       if (
         !test ||
-        !test.inputs ||
-        !Array.isArray(test.inputs) ||
-        test.inputs.length === 0 ||
-        !test.result ||
-        !Array.isArray(test.result) ||
-        test.result.length === 0
+        test.inputs === undefined ||
+        test.result === undefined ||
+        !test.inputDataType ||
+        !test.resultDataType
       ) {
         return false;
       }
