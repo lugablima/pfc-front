@@ -19,6 +19,7 @@ import ExercisesProvider from "./contexts/ExercisesContext";
 import Video from "./pages/Video";
 import Summary from "./pages/Summary";
 import ModalProvider from "./contexts/ModalContext";
+import CustomModal from "./components/CustomModal";
 
 function App() {
   return (
@@ -51,7 +52,9 @@ function App() {
                 path="/modules/:moduleId/classes/:classId/exercises"
                 Component={ExercisesPage}
               />
+              <Route path="/dashboard" Component={NewModule} />
             </Routes>
+            <CustomModal />
           </BrowserRouter>
         </ModalProvider>
       </ExercisesProvider>
