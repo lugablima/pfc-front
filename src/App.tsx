@@ -14,6 +14,7 @@ import Classes from "./pages/Classes";
 import NewClass from "./pages/NewClass";
 import EditModule from "./pages/EditModule";
 import EditClass from "./pages/EditClass";
+import ExercisesPage from "./pages/ExercisesPage";
 import ExercisesProvider from "./contexts/ExercisesContext";
 import Video from "./pages/Video";
 import Summary from "./pages/Summary";
@@ -22,6 +23,20 @@ function App() {
   return (
     <UserProvider>
       <ExercisesProvider>
+          <BrowserRouter>
+            <Header />
+            <Routes>
+              <Route path="/" Component={SignIn} />
+              <Route path="/sign-up" Component={SignUp} />
+              <Route path="/modules" Component={Modules} />
+              <Route path="/new-module" Component={NewModule} />
+              <Route path="/modules/:moduleId/classes" Component={Classes} />
+              <Route path="/modules/:moduleId/edit" Component={EditModule} />
+              <Route
+                path="/modules/:moduleId/classes/:classId/edit"
+                Component={EditClass}
+              />
+              <Route path="/modules/:moduleId/new-class" Component={NewClass} />
               <Route
                 path="/modules/:moduleId/classes/:classId/video"
                 Component={Video}
@@ -30,6 +45,12 @@ function App() {
                 path="/modules/:moduleId/classes/:classId/summary"
                 Component={Summary}
               />
+              <Route
+                path="/modules/:moduleId/classes/:classId/exercises"
+                Component={ExercisesPage}
+              />
+            </Routes>
+          </BrowserRouter>
       </ExercisesProvider>
     </UserProvider>
   );
