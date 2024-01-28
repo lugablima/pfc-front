@@ -15,7 +15,10 @@ export default function ExerciseStatus({
       <p>
         Status: <span>{resolutions.length ? "Enviado" : "Não enviado"}</span>
       </p>
-      <p>Passou em {grade}% dos testes</p>
+      <p>
+        Passou em {resolutions.length ? resolutions[0].grade : grade}% dos
+        testes
+      </p>
     </Container>
   );
 }

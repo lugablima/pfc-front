@@ -82,20 +82,12 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
   const [outputDetails, setOutputDetails] = useState<string | null>(null);
   const [processing, setProcessing] = useState<boolean | null>(null);
   const [grade, setGrade] = useState<number | null>(null);
-  // const [status, setStatus] = useState<boolean>(false);
 
   useEffect(() => {
     const initExerciseInfos = () => {
       if (exercise.resolutions.length) {
-        // const originalCode = JSON.parse(exercise.resolutions[0].resolution);
-        // console.log(originalCode);
-        // setCode(originalCode);
         setGrade(exercise.resolutions[0].grade);
-        // setStatus(true);
-        // return;
       }
-
-      // setCode(cDefault);
     };
 
     initExerciseInfos();
@@ -123,6 +115,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
         "X-RapidAPI-Key": import.meta.env.VITE_API_RAPID_API_KEY,
       },
     };
+
     try {
       const response = await axios.request(options);
       const statusId = response.data.status?.id;
@@ -133,7 +126,6 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
         setTimeout(() => {
           checkStatus(token);
         }, 2000);
-        // return;
       } else {
         setProcessing(false);
         setOutputDetails(response.data);
@@ -151,18 +143,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
             resolution: JSON.stringify(code),
           },
         });
-        // await exerciseService.createOrUpdateResolution(
-        //   user?.token as string,
-        //   exercise.id,
-        //   {
-        //     grade: gradeGenerated,
-        //     resolution: JSON.stringify(code),
-        //   },
-        // );
-        // setStatus(true);
-        // fetchExercises(user?.token as string, params.classId as string);
         // showSuccessToast(`Compiled Successfully!`)
-        console.log("response.data", response.data);
       }
     } catch (err) {
       console.log("err", err);
@@ -179,7 +160,6 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       exercise.tests,
       toCamelCase(exercise.name),
     );
-    console.log("newCode: ", newCode);
 
     const formData = {
       language_id: cLanguageProps.id,
@@ -187,6 +167,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       source_code: btoa(newCode),
       // stdin: btoa(customInput),
     };
+
     const options = {
       method: "POST",
       url: import.meta.env.VITE_API_RAPID_API_URL,
@@ -203,7 +184,6 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
     axios
       .request(options)
       .then((response) => {
-        console.log("res.data", response.data);
         const { token } = response.data;
         checkStatus(token);
       })

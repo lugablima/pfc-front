@@ -41,19 +41,16 @@ export default function ModalProvider({ children }: Props) {
   const { fetchExercises } = useExercisesContext() as IExercisesContext;
 
   const handleOpenModal = (modalProps: IModalInfos) => {
-    console.log("ModalProps: ", modalProps);
     setModalInfos(modalProps);
     setIsModalOpen(true);
   };
 
   const handleCancelClick = () => {
-    console.log("Cancel clicado");
     setModalInfos(null);
     setIsModalOpen(false);
   };
 
   const handleSendClick = async () => {
-    console.log("Enviar clicado");
     await exerciseService.createOrUpdateResolution(
       modalInfos?.token as string,
       modalInfos?.exerciseId as string,
@@ -64,6 +61,7 @@ export default function ModalProvider({ children }: Props) {
       modalInfos?.token as string,
       modalInfos?.classId as string,
     );
+
     handleCancelClick();
   };
 
