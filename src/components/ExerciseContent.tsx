@@ -83,6 +83,8 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
   const [processing, setProcessing] = useState<boolean | null>(null);
   const [grade, setGrade] = useState<number | null>(null);
 
+  const exerciseHasExpired = new Date(exercise.class.dueDate) < new Date();
+
   useEffect(() => {
     const initExerciseInfos = () => {
       if (exercise.resolutions.length) {
@@ -204,12 +206,17 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       <RightSide>
         <CodeEditor code={code} onChange={onChange} />
         <Terminal outputDetails={outputDetails} />
-        <Flex
-          $justifyContent={grade !== null ? "space-between" : "flex-end"}
-          $m="1rem 0 0 0"
-        >
+        <Flex $justifyContent="space-between" $m="1rem 0 0 0">
           {grade !== null && (
             <ExerciseStatus grade={grade} resolutions={exercise.resolutions} />
+          )}
+          {exercise && (
+            <Text $exerciseHasExpired={exerciseHasExpired}>
+              Prazo de entrega:{" "}
+              <span>
+                {new Date(exercise.class.dueDate).toLocaleDateString()}
+              </span>
+            </Text>
           )}
           <Button
             $w={10.875}
@@ -219,7 +226,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
             $borderRadius={6.25}
             text={processing ? "Processando..." : "Checar exercício"}
             $margin="0 1rem 0 0"
-            disabled={!code}
+            disabled={!code || exerciseHasExpired}
             onClick={handleCompile}
           />
         </Flex>
@@ -240,4 +247,18 @@ const RightSide = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+`;
+
+const Text = styled.p<{ $exerciseHasExpired: boolean }>`
+  color: #000;
+  font-family: Montserrat;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%; /* 1.5rem */
+  letter-spacing: -0.06rem;
+
+  & > span {
+    color: ${(props) => (props.$exerciseHasExpired ? "#f00" : "#008000")};
+  }
 `;

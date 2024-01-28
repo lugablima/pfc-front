@@ -101,6 +101,7 @@ export default function ExercisesPage() {
             selectedTab < exercises.length - 1 &&
             setSelectedTab(selectedTab + 1)
           }
+          disabled={exercises ? selectedTab === exercises.length - 1 : false}
         />
       </Header>
       {RenderExercisesContent()}

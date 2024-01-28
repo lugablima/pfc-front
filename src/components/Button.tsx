@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
 import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
@@ -24,6 +25,7 @@ export default function Button({
   $borderRadius,
   onClick,
   type,
+  ...props
 }: IButton) {
   return (
     <Container
@@ -35,6 +37,7 @@ export default function Button({
       $borderRadius={$borderRadius}
       onClick={() => onClick?.()}
       type={type || "button"}
+      {...props}
     >
       {text}
     </Container>
@@ -59,7 +62,12 @@ const Container = styled.button<Omit<IButton, "text">>`
   letter-spacing: -0.04rem;
   margin: ${(props) => (props.$margin ? props.$margin : 0)};
 
-  &:hover {
+  &:hover:not(:disabled) {
     filter: brightness(0.97);
+  }
+
+  &:disabled {
+    mix-blend-mode: luminosity;
+    cursor: auto;
   }
 `;
