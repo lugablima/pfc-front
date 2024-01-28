@@ -18,11 +18,13 @@ import ExercisesPage from "./pages/ExercisesPage";
 import ExercisesProvider from "./contexts/ExercisesContext";
 import Video from "./pages/Video";
 import Summary from "./pages/Summary";
+import ModalProvider from "./contexts/ModalContext";
 
 function App() {
   return (
     <UserProvider>
       <ExercisesProvider>
+        <ModalProvider>
           <BrowserRouter>
             <Header />
             <Routes>
@@ -51,6 +53,7 @@ function App() {
               />
             </Routes>
           </BrowserRouter>
+        </ModalProvider>
       </ExercisesProvider>
     </UserProvider>
   );
