@@ -21,6 +21,7 @@ import Summary from "./pages/Summary";
 import ModalProvider from "./contexts/ModalContext";
 import CustomModal from "./components/CustomModal";
 import Dashboard from "./pages/Dashboard";
+import DashboardForStudent from "./pages/DashboardForStudent";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
       <ExercisesProvider>
         <ModalProvider>
                 <Route path="/dashboard" Component={Dashboard} />
+                <Route
+                  path="/dashboard/:userId"
+                  Component={DashboardForStudent}
+                />
         </ModalProvider>
       </ExercisesProvider>
     </UserProvider>
