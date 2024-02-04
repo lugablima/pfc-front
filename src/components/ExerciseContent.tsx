@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import _ from "lodash";
 import ExerciseStatement from "./ExerciseStatement";
 import CodeEditor from "./CodeEditor";
 import Terminal from "./Terminal";
@@ -10,17 +11,18 @@ import { IExercises } from "../contexts/ExercisesContext";
 import { Flex } from "../layouts/GeneralForm";
 import Button from "./Button";
 import { generateCTests } from "../utils/generateTests";
-import toCamelCase from "../utils/toCamelCase";
+// import toCamelCase from "../utils/toCamelCase";
 import generateGradeForTesting from "../utils/generateGradeForTests";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import ExerciseStatus from "./ExerciseStatus";
 import { IModalContext, useModalContext } from "../contexts/ModalContext";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 interface IExerciseContenProps {
   exercise: IExercises;
 }
 
-const cDefault = `// some comment`;
+// const cDefault = `// some comment`;
 
 const cLanguageProps = {
   id: 50,
@@ -71,14 +73,32 @@ const cLanguageProps = {
 
 export default function ExerciseContent({ exercise }: IExerciseContenProps) {
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
   const { handleOpenModal } = useModalContext() as IModalContext;
   const params = useParams<{ classId: string }>();
 
-  const [code, setCode] = useState(
-    exercise.resolutions.length
-      ? JSON.parse(exercise.resolutions[0].resolution)
-      : cDefault,
-  );
+  const setDefaultCode = (): string => {
+    if (exercise.resolutions.length) {
+      return JSON.parse(exercise.resolutions[0].resolution);
+    }
+
+    const inputDataType =
+      exercise.tests[0].inputDataType.split(" ")[1] === "array"
+        ? `${
+            exercise.tests[0].inputDataType.split(" ")[0]
+          } array[], size_t arrayLength`
+        : `${exercise.tests[0].inputDataType.split(" ")[0]} param`;
+
+    const defaultCode = `#include <stdio.h>\n\n${
+      exercise.tests[0].resultDataType.split(" ")[0]
+    } ${_.camelCase(
+      exercise.name,
+    )}(${inputDataType}) {\n// Escreva o código aqui\n}`;
+
+    return defaultCode;
+  };
+
+  const [code, setCode] = useState(setDefaultCode());
   const [outputDetails, setOutputDetails] = useState<string | null>(null);
   const [processing, setProcessing] = useState<boolean | null>(null);
   const [grade, setGrade] = useState<number | null>(null);
@@ -87,9 +107,11 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
 
   useEffect(() => {
     const initExerciseInfos = () => {
+      showLoader();
       if (exercise.resolutions.length) {
         setGrade(exercise.resolutions[0].grade);
       }
+      hideLoader();
     };
 
     initExerciseInfos();
@@ -129,6 +151,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
           checkStatus(token);
         }, 2000);
       } else {
+        hideLoader();
         setProcessing(false);
         setOutputDetails(response.data);
         const gradeGenerated = generateGradeForTesting(
@@ -149,18 +172,20 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       }
     } catch (err) {
       console.log("err", err);
+      hideLoader();
       setProcessing(false);
       // showErrorToast();
     }
   };
 
   const handleCompile = () => {
+    showLoader();
     setProcessing(true);
 
     const newCode = generateCTests(
       code,
       exercise.tests,
-      toCamelCase(exercise.name),
+      _.camelCase(exercise.name),
     );
 
     const formData = {
@@ -191,6 +216,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       })
       .catch((err) => {
         const error = err.response ? err.response.data : err;
+        hideLoader();
         setProcessing(false);
         console.log(error);
       });
