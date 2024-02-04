@@ -20,42 +20,14 @@ import Video from "./pages/Video";
 import Summary from "./pages/Summary";
 import ModalProvider from "./contexts/ModalContext";
 import CustomModal from "./components/CustomModal";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
     <UserProvider>
       <ExercisesProvider>
         <ModalProvider>
-          <BrowserRouter>
-            <Header />
-            <Routes>
-              <Route path="/" Component={SignIn} />
-              <Route path="/sign-up" Component={SignUp} />
-              <Route path="/modules" Component={Modules} />
-              <Route path="/new-module" Component={NewModule} />
-              <Route path="/modules/:moduleId/classes" Component={Classes} />
-              <Route path="/modules/:moduleId/edit" Component={EditModule} />
-              <Route
-                path="/modules/:moduleId/classes/:classId/edit"
-                Component={EditClass}
-              />
-              <Route path="/modules/:moduleId/new-class" Component={NewClass} />
-              <Route
-                path="/modules/:moduleId/classes/:classId/video"
-                Component={Video}
-              />
-              <Route
-                path="/modules/:moduleId/classes/:classId/summary"
-                Component={Summary}
-              />
-              <Route
-                path="/modules/:moduleId/classes/:classId/exercises"
-                Component={ExercisesPage}
-              />
-              <Route path="/dashboard" Component={NewModule} />
-            </Routes>
-            <CustomModal />
-          </BrowserRouter>
+                <Route path="/dashboard" Component={Dashboard} />
         </ModalProvider>
       </ExercisesProvider>
     </UserProvider>
