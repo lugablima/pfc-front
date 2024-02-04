@@ -222,6 +222,13 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       });
   };
 
+  const formatDate = new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
   return (
     <Content>
       <ExerciseStatement
@@ -239,9 +246,7 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
           {exercise && (
             <Text $exerciseHasExpired={exerciseHasExpired}>
               Prazo de entrega:{" "}
-              <span>
-                {new Date(exercise.class.dueDate).toLocaleDateString()}
-              </span>
+              <span>{formatDate.format(new Date(exercise.class.dueDate))}</span>
             </Text>
           )}
           <Button
