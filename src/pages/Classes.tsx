@@ -8,11 +8,13 @@ import Button from "../components/Button";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import checkUserAccess from "../hooks/useCheckUserAccess";
 import * as classService from "../services/classService";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export default function Classes() {
   const [classes, setClasses] = useState<classService.TGetAllClasses[]>([]);
   const [update, setUpdate] = useState<boolean>(false);
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string }>();
 
@@ -27,11 +29,14 @@ export default function Classes() {
       try {
         if (!params.moduleId) return;
 
+        showLoader();
         const res = await classService.getAll(token, params.moduleId);
 
         setClasses(res);
       } catch (error) {
         alert(error);
+      } finally {
+        hideLoader();
       }
     }
 
@@ -71,7 +76,7 @@ export default function Classes() {
             $textColor="#F6F5F4"
             text="Voltar"
             $margin="0 0 3rem 0"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/modules")}
           />
           {user?.isAdmin && (
             <Button

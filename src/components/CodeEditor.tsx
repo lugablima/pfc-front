@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Editor } from "@monaco-editor/react";
+import Loader from "./Loader";
 
 interface ICodeEditorProps {
   onChange: (eventName: string, value: string) => void;
@@ -10,11 +11,11 @@ interface ICodeEditorProps {
 export default function CodeEditor({ onChange, code }: ICodeEditorProps) {
   const [value, setValue] = useState(code || "");
 
-  // const editorOptions = {
-  //   selectOnLineNumbers: true,
-  //   fontSize: 14,
-  //   automaticLayout: true,
-  // };
+  const editorOptions = {
+    selectOnLineNumbers: true,
+    fontSize: 14,
+    automaticLayout: true,
+  };
 
   const handleEditorChange = (newValue: any) => {
     setValue(newValue);
@@ -47,7 +48,8 @@ export default function CodeEditor({ onChange, code }: ICodeEditorProps) {
       theme="vs-dark"
       value={value}
       onChange={handleEditorChange}
-      // options={{ ...editorOptions }}
+      loading={<Loader />}
+      options={{ ...editorOptions }}
     />
   );
 }

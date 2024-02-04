@@ -12,6 +12,7 @@ import SubClass from "../components/SubClass";
 import * as moduleService from "../services/moduleService";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import checkUserAccess from "../hooks/useCheckUserAccess";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 type TModule = Omit<moduleService.IModule, "id" | "createdAt" | "isEnabled">;
 
@@ -55,6 +56,7 @@ export default function NewModule() {
   ]);
   const navigate = useNavigate();
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     checkUserAccess(user, navigate);
@@ -81,6 +83,7 @@ export default function NewModule() {
     };
 
     try {
+      showLoader();
       await moduleService.create(user?.token as string, body);
 
       setModule({ ...defaultModule });
@@ -90,6 +93,8 @@ export default function NewModule() {
       navigate("/modules");
     } catch (error) {
       alert(error);
+    } finally {
+      hideLoader();
     }
   }
 
@@ -104,7 +109,7 @@ export default function NewModule() {
             $textColor="#FFF"
             text="Voltar"
             $margin="0 0 3rem 0"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/modules")}
           />
         </Header>
         <h4>Cadastrar módulo</h4>

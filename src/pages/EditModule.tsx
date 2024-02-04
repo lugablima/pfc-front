@@ -12,6 +12,7 @@ import SubClass from "../components/SubClass";
 import * as moduleService from "../services/moduleService";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import checkUserAccess from "../hooks/useCheckUserAccess";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 type TModule = Omit<moduleService.IModule, "id" | "createdAt" | "isEnabled">;
 
@@ -58,12 +59,14 @@ export default function EditModule() {
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string }>();
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     checkUserAccess(user, navigate);
 
     async function fetchData() {
       try {
+        showLoader();
         const res = await moduleService.getInfosForEdit(
           user?.token as string,
           params.moduleId as string,
@@ -92,6 +95,8 @@ export default function EditModule() {
         );
       } catch (error) {
         alert(error);
+      } finally {
+        hideLoader();
       }
     }
 
@@ -105,6 +110,7 @@ export default function EditModule() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    showLoader();
 
     const body = {
       ...module,
@@ -133,6 +139,8 @@ export default function EditModule() {
       navigate("/modules");
     } catch (error) {
       alert(error);
+    } finally {
+      hideLoader();
     }
   }
 
@@ -147,7 +155,7 @@ export default function EditModule() {
             $textColor="#FFF"
             text="Voltar"
             $margin="0 0 3rem 0"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/modules")}
             type="button"
           />
         </Header>

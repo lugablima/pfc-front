@@ -8,11 +8,13 @@ import Button from "../components/Button";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import checkUserAccess from "../hooks/useCheckUserAccess";
 import * as moduleService from "../services/moduleService";
+import { useLoaderContext, ILoaderContext } from "../contexts/LoaderContext";
 
 export default function Modules() {
   const [modules, setModules] = useState<moduleService.IModule[]>([]);
   const [update, setUpdate] = useState<boolean>(false);
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
   const navigate = useNavigate();
 
   function updateModules() {
@@ -24,11 +26,14 @@ export default function Modules() {
 
     async function fetchData(token: string) {
       try {
+        showLoader();
         const res = await moduleService.getAll(token);
 
         setModules(res);
       } catch (error) {
         alert(error);
+      } finally {
+        hideLoader();
       }
     }
 

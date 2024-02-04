@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import YouTube from "react-youtube";
 import PageContainer from "../layouts/PageContainer";
 import Button from "../components/Button";
 import { Flex } from "../layouts/GeneralForm";
 import checkUserAccess from "../hooks/useCheckUserAccess";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import * as videoService from "../services/videoService";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export default function Video() {
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string; classId: string }>();
   const { user } = useUserContext() as IUserContext;
   const [videoInfos, setVideoInfos] = useState<videoService.IVideoOrSummary>();
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     checkUserAccess(user, navigate);
@@ -22,6 +23,7 @@ export default function Video() {
       try {
         if (!params.classId) return;
 
+        showLoader();
         const res = await videoService.getOne(token, params.classId);
 
         setVideoInfos(res);
@@ -34,14 +36,6 @@ export default function Video() {
       fetchData(user.token);
     }
   }, []);
-
-  const opts = {
-    height: "484",
-    width: "100%",
-    playerVars: {
-      // Adicione parâmetros do player aqui, se necessário (consulte a documentação do YouTube API)
-    },
-  };
 
   return (
     <PageContainer $display="flex" $justContent="center">
@@ -59,9 +53,18 @@ export default function Video() {
 
         <h5>{videoInfos && videoInfos.class.name}</h5>
 
-        <YouTube videoId={videoInfos?.url.split("?v=")[1]} opts={opts} />
+        <VideoContainer
+          src={`https://www.youtube.com/embed/${videoInfos?.url.split(
+            "https://youtu.be/",
+          )[1]}`}
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          onLoad={() => hideLoader()}
+        />
 
-        <Flex $justifyContent="space-between" $m="3rem 0 0 0">
+        <Flex $justifyContent="space-between" $m="0">
           <Button
             $w={12.1875}
             $h={2.75}
@@ -110,8 +113,8 @@ const Content = styled.div`
   }
 `;
 
-// const VideoContainer = styled.div`
-//   height: 30.25rem;
-//   background-color: black;
-//   margin-bottom: 3rem;
-// `;
+const VideoContainer = styled.iframe`
+  width: 100%;
+  height: 30.25rem;
+  margin-bottom: 3rem;
+`;

@@ -12,7 +12,6 @@ import Button from "../components/Button";
 import {
   FileBox,
   FileButton,
-  FileInput,
   Flex,
   InfoIcon,
   Input,
@@ -23,12 +22,13 @@ import { IUserContext, useUserContext } from "../contexts/UserContext";
 import checkUserAccess from "../hooks/useCheckUserAccess";
 import InfoBox from "../components/InfoBox";
 
-import cloudUpload from "../assets/images/cloud-upload.svg";
+// import cloudUpload from "../assets/images/cloud-upload.svg";
 import fileIcon from "../assets/images/file-icon.svg";
 import garbageIcon from "../assets/images/garbage-icon.svg";
 import infoIcon from "../assets/images/info-icon.svg";
 import { IClasses } from "./NewModule";
 import validateJSONStructure from "../utils/validateJsonFile";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export default function NewClass() {
   const defaultClass = {
@@ -53,6 +53,7 @@ export default function NewClass() {
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string }>();
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     checkUserAccess(user, navigate);
@@ -102,6 +103,7 @@ export default function NewClass() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    showLoader();
 
     const body = {
       name: _class.name,
@@ -123,6 +125,8 @@ export default function NewClass() {
       navigate(`/modules/${params.moduleId}/classes`);
     } catch (error) {
       alert(error);
+    } finally {
+      hideLoader();
     }
   }
 
@@ -137,7 +141,7 @@ export default function NewClass() {
             $textColor="#FFF"
             text="Voltar"
             $margin="0 0 3rem 0"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/modules/${params.moduleId}/classes`)}
           />
         </Header>
         <h4>Cadastrar aula</h4>
@@ -192,10 +196,10 @@ export default function NewClass() {
             <InfoBox onClick={() => setToggleInfoBox(!toggleInfoBox)} />
           )}
         </Flex>
-        <FileInput>
+        {/* <FileInput>
           <img src={cloudUpload} alt="Cloud icon" />
           <h6>Arraste e solte aqui</h6>
-        </FileInput>
+        </FileInput> */}
         <input
           id="exercise-file"
           type="file"
@@ -205,7 +209,7 @@ export default function NewClass() {
           hidden
           required
         />
-        <Flex $w={26.25} $justifyContent="flex-end">
+        <Flex $w={26.25} $justifyContent="center">
           <FileButton onClick={() => selectFile()} type="button">
             Selecionar arquivo
           </FileButton>

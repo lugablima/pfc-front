@@ -9,27 +9,30 @@ import { IUserContext, useUserContext } from "../contexts/UserContext";
 import * as summaryService from "../services/summaryService";
 import { IVideoOrSummary } from "../services/videoService";
 import checkUserAccess from "../hooks/useCheckUserAccess";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export default function Summary() {
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string; classId: string }>();
   const { user } = useUserContext() as IUserContext;
   const [summaryInfos, setSummaryInfos] = useState<IVideoOrSummary>();
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     checkUserAccess(user, navigate);
-
-    console.log("summary", summaryInfos);
 
     async function fetchData(token: string) {
       try {
         if (!params.classId) return;
 
+        showLoader();
         const res = await summaryService.getOne(token, params.classId);
 
         setSummaryInfos(res);
       } catch (error) {
         alert(error);
+      } finally {
+        hideLoader();
       }
     }
 
@@ -95,4 +98,5 @@ const SummaryContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 3rem;
+  text-align: center;
 `;

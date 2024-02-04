@@ -14,9 +14,11 @@ import {
   IExercisesContext,
   useExercisesContext,
 } from "../contexts/ExercisesContext";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export default function ExercisesPage() {
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
   const { exercises, fetchExercises } =
     useExercisesContext() as IExercisesContext;
   const params = useParams<{ moduleId: string; classId: string }>();
@@ -28,7 +30,8 @@ export default function ExercisesPage() {
     checkUserAccess(user, navigate);
 
     if (user?.token && params.classId) {
-      fetchExercises(user.token, params.classId);
+      showLoader();
+      fetchExercises(user.token, params.classId).then(() => hideLoader());
     }
   }, []);
 

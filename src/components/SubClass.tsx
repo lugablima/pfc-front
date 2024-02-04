@@ -6,7 +6,6 @@ import { useState } from "react";
 import {
   FileBox,
   FileButton,
-  FileInput,
   Flex,
   InfoIcon,
   Input,
@@ -14,7 +13,7 @@ import {
   SubLabel,
 } from "../layouts/GeneralForm";
 import InfoBox from "./InfoBox";
-import cloudUpload from "../assets/images/cloud-upload.svg";
+// import cloudUpload from "../assets/images/cloud-upload.svg";
 import fileIcon from "../assets/images/file-icon.svg";
 import garbageIcon from "../assets/images/garbage-icon.svg";
 import infoIcon from "../assets/images/info-icon.svg";
@@ -138,10 +137,10 @@ export default function SubClass({
           <InfoBox onClick={() => setToggleInfoBox(!toggleInfoBox)} />
         )}
       </Flex>
-      <FileInput>
+      {/* <FileInput>
         <img src={cloudUpload} alt="Cloud icon" />
         <h6>Arraste e solte aqui</h6>
-      </FileInput>
+      </FileInput> */}
       <input
         id={`exercise-file-${index}`}
         type="file"
@@ -151,7 +150,7 @@ export default function SubClass({
         readOnly
         required={isCreating}
       />
-      <Flex $w={26.25} $justifyContent="flex-end">
+      <Flex $w={26.25} $justifyContent="center">
         <FileButton onClick={() => selectFile()} type="button">
           Selecionar arquivo
         </FileButton>

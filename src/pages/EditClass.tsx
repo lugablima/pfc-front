@@ -12,7 +12,6 @@ import Button from "../components/Button";
 import {
   FileBox,
   FileButton,
-  FileInput,
   Flex,
   InfoIcon,
   Input,
@@ -23,12 +22,13 @@ import { IUserContext, useUserContext } from "../contexts/UserContext";
 import checkUserAccess from "../hooks/useCheckUserAccess";
 import InfoBox from "../components/InfoBox";
 
-import cloudUpload from "../assets/images/cloud-upload.svg";
+// import cloudUpload from "../assets/images/cloud-upload.svg";
 import fileIcon from "../assets/images/file-icon.svg";
 import garbageIcon from "../assets/images/garbage-icon.svg";
 import infoIcon from "../assets/images/info-icon.svg";
 import { IClasses } from "./NewModule";
 import validateJSONStructure from "../utils/validateJsonFile";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export default function EditClass() {
   const defaultClass = {
@@ -53,12 +53,14 @@ export default function EditClass() {
   const navigate = useNavigate();
   const params = useParams<{ moduleId: string; classId: string }>();
   const { user } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     checkUserAccess(user, navigate);
 
     async function fetchData() {
       try {
+        showLoader();
         const res = await classService.getInfosForEdit(
           user?.token as string,
           params.classId as string,
@@ -79,6 +81,8 @@ export default function EditClass() {
         });
       } catch (error) {
         alert(error);
+      } finally {
+        hideLoader();
       }
     }
 
@@ -129,6 +133,7 @@ export default function EditClass() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    showLoader();
 
     const body = {
       name: _class.name,
@@ -154,6 +159,8 @@ export default function EditClass() {
       navigate(`/modules/${params.moduleId}/classes`);
     } catch (error) {
       alert(error);
+    } finally {
+      hideLoader();
     }
   }
 
@@ -168,7 +175,7 @@ export default function EditClass() {
             $textColor="#FFF"
             text="Voltar"
             $margin="0 0 3rem 0"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/modules/${params.moduleId}/classes`)}
             type="button"
           />
         </Header>
@@ -220,10 +227,10 @@ export default function EditClass() {
             <InfoBox onClick={() => setToggleInfoBox(!toggleInfoBox)} />
           )}
         </Flex>
-        <FileInput>
+        {/* <FileInput>
           <img src={cloudUpload} alt="Cloud icon" />
           <h6>Arraste e solte aqui</h6>
-        </FileInput>
+        </FileInput> */}
         <input
           id="exercise-file"
           type="file"
@@ -232,7 +239,7 @@ export default function EditClass() {
           readOnly
           hidden
         />
-        <Flex $w={26.25} $justifyContent="flex-end">
+        <Flex $w={26.25} $justifyContent="center">
           <FileButton onClick={() => selectFile()} type="button">
             Selecionar arquivo
           </FileButton>
