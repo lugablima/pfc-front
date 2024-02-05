@@ -10,21 +10,43 @@ interface IInfoBoxProps {
 }
 
 export default function InfoBox({ onClick }: IInfoBoxProps) {
-  const infoMsg = `
-        {
-          "exercise_[sequence]": {
-            "name": "Maior Valor",
-            "statement": "Considere um array...",
-            "tests": {
-              "test_[sequence]": {
-                "inputs": {
-                  "parameter_1": [10, 25, 50]
-                },
-                "result": 50,
-              }
-            }  
-          }
-        }`;
+  const infoMsg = {
+    exercises: [
+      {
+        name: "Maior valor",
+        statement: "Dado um array de inteiros...",
+        tests: [
+          {
+            inputs: [10, 20, 30],
+            inputDataType: "int array",
+            result: 30,
+            resultDataType: "int",
+          },
+          {
+            inputs: [50, 60, 70],
+            inputDataType: "int array",
+            result: 70,
+            resultDataType: "int",
+          },
+        ],
+      },
+    ],
+  };
+  // const infoMsg = `
+  //       {
+  //         "exercise_[sequence]": {
+  //           "name": "Maior Valor",
+  //           "statement": "Considere um array...",
+  //           "tests": {
+  //             "test_[sequence]": {
+  //               "inputs": {
+  //                 "parameter_1": [10, 25, 50]
+  //               },
+  //               "result": 50,
+  //             }
+  //           }
+  //         }
+  //       }`;
 
   return (
     <Container>
@@ -33,7 +55,7 @@ export default function InfoBox({ onClick }: IInfoBoxProps) {
         <h5>Estrutura do arquivo JSON</h5>
         <img src={closeIcon} alt="Close icon" onClick={() => onClick()} />
       </Header>
-      <pre>{infoMsg}</pre>
+      <pre>{JSON.stringify(infoMsg, null, 4)}</pre>
     </Container>
   );
 }
@@ -42,8 +64,8 @@ const Container = styled.div`
   /* display: flex;
   flex-direction: column;
   align-items: center; */
-  width: 19.75rem;
-  height: 16.625rem;
+  width: 21.75rem;
+  height: 18rem;
   padding: 0.625rem 0.75rem;
   position: absolute;
   top: 0;
@@ -53,6 +75,7 @@ const Container = styled.div`
   border-radius: 0.25rem;
   background: var(--primary);
   box-shadow: 0px 6px 20px 0px rgba(145, 145, 145, 0.47);
+  overflow-y: auto;
 
   pre {
     color: var(--white);
@@ -64,7 +87,7 @@ const Container = styled.div`
     font-size: 0.8125rem;
     font-style: normal;
     font-weight: 500;
-    margin-left: 1.5rem;
+    margin-left: 1rem;
     align-self: stretch;
   }
 `;
