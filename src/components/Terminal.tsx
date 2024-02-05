@@ -6,6 +6,22 @@ interface ITerminalProps {
 }
 
 export default function Terminal({ outputDetails }: ITerminalProps) {
+  const paintTerminalMessages = (value: string) => {
+    const messages = value.split("\n");
+
+    return messages.map((msg) => {
+      const style = {
+        color: msg.includes("PASSOU") ? "green" : "red",
+      };
+
+      return (
+        <p key={Math.random()} style={style}>
+          {msg}
+        </p>
+      );
+    });
+  };
+
   const getOutput = () => {
     const statusId = outputDetails?.status?.id;
 
@@ -18,13 +34,7 @@ export default function Terminal({ outputDetails }: ITerminalProps) {
       );
     }
     if (statusId === 3) {
-      return (
-        <pre style={{ color: "green" }}>
-          {atob(outputDetails.stdout) !== null
-            ? `${atob(outputDetails.stdout)}`
-            : null}
-        </pre>
-      );
+      return <>{paintTerminalMessages(atob(outputDetails.stdout))}</>;
     }
     if (statusId === 5) {
       return <pre style={{ color: "red" }}>Time Limit Exceeded</pre>;
@@ -83,8 +93,10 @@ const Content = styled.div`
   height: 12.4375rem;
   padding: 0.75rem;
   background: #1e1f22;
+  overflow-y: auto;
 
-  pre {
+  pre,
+  p {
     color: #dfe1e5;
     font-feature-settings:
       "clig" off,
