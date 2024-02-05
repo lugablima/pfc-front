@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import styled from "styled-components";
 import Tab from "./Tab";
 import {
@@ -14,19 +15,22 @@ export default function Tabs({ selectedTab, onChangeTab }: ITabsProps) {
   const { exercises } = useExercisesContext() as IExercisesContext;
 
   return (
-    <Container>
-      {exercises?.length &&
-        exercises.map((ex, idx) => (
-          <Tab
-            key={ex.id}
-            label={ex.name}
-            index={idx}
-            value={selectedTab}
-            onClick={() => onChangeTab(idx)}
-            $bg={ex.resolutions.length ? "#009FE0B2" : "#f7f8fa"}
-          />
-        ))}
-    </Container>
+    <>
+      {exercises && exercises?.length > 1 && (
+        <Container>
+          {exercises.map((ex, idx) => (
+            <Tab
+              key={ex.id}
+              label={`${ex.sequence}`}
+              index={idx}
+              value={selectedTab}
+              onClick={() => onChangeTab(idx)}
+              $bg={ex.resolutions.length ? "#009FE0B2" : "#f7f8fa"}
+            />
+          ))}
+        </Container>
+      )}
+    </>
   );
 }
 

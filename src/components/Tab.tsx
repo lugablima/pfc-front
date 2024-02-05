@@ -19,7 +19,7 @@ export default function Tab({
 }: ITabProps) {
   return (
     <Container $bg={$bg} $isSelected={index === value} {...props}>
-      <h6>{label}</h6>
+      <h6>Ex. {label}</h6>
     </Container>
   );
 }
