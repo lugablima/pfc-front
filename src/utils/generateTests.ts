@@ -30,6 +30,7 @@ export function generateCTests(
               index + 1,
               exName,
               test.resultDataType.split(" ")[1],
+              test.inputDataType.split(" ")[1],
             )}
             ${compareExpectedResultAndResult(
               test.resultDataType.split(" ")[0],
@@ -106,7 +107,14 @@ export function generateResultDeclaration(
   resultIdx: number,
   exName: string,
   resultDataType?: string,
+  inputDataType?: string,
 ) {
+  if (inputDataType === "array") {
+    return `
+    size_t len${resultIdx} = sizeof(var${resultIdx}) / sizeof(var${resultIdx}[0]);
+    ${resultPrimitiveDataType} resultado${resultIdx} = ${exName}(var${resultIdx}, len${resultIdx});`;
+  }
+
   if (!resultDataType) {
     return `${resultPrimitiveDataType} resultado${resultIdx} = ${exName}(var${resultIdx});`;
   }
@@ -146,7 +154,7 @@ export function compareExpectedResultAndResult(
   if (resultDataType === "array") {
     return `
             int i;
-            int tam = sizeof(${expectedResult}) / sizeof(${expectedResult[0]});
+            size_t tam = sizeof(${expectedResult}) / sizeof(${expectedResult[0]});
             for(i=0; i < tam; i++) {
               if (resultado${resultIdx}[i] != ${expectedResult}[i]) {
                 printf("[FALHOU]. Esperava: ${expectedResult}. Retornou: %d\\n", resultado${resultIdx});
