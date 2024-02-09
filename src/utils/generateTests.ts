@@ -138,6 +138,19 @@ export function compareExpectedResultAndResult(
     expectedResult = parseFloat(expectedResult).toFixed(6);
   }
 
+  if (resultPrimitiveDataType === "bool") {
+    return `
+    if (resultado${resultIdx} == ${expectedResult}) {
+      printf("[PASSOU]. Esperava: ${expectedResult}. Retornou: %${getConversionForPrintf(
+        resultPrimitiveDataType,
+      )}\\n", resultado${resultIdx} ? "true" : "false");
+    } else {
+      printf("[FALHOU]. Esperava: ${expectedResult}. Retornou: %${getConversionForPrintf(
+        resultPrimitiveDataType,
+      )}\\n", resultado${resultIdx} ? "true" : "false");
+    }`;
+  }
+
   if (!resultDataType) {
     return `
       if (resultado${resultIdx} == ${expectedResult}) {
@@ -220,8 +233,8 @@ function getConversionForPrintf(dataType: string, decimalPoints?: number) {
       return decimalPoints ? `.${decimalPoints}f` : "f";
     case "double":
       return decimalPoints ? `.${decimalPoints}f` : "f";
-    case "_Bool":
-      return "d";
+    case "bool":
+      return "s";
     case "char":
       return "c";
     case "array":

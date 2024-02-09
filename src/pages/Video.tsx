@@ -38,7 +38,7 @@ export default function Video() {
   }, []);
 
   return (
-    <PageContainer $display="flex" $justContent="center">
+    <PageContainer $display="flex" $justContent="center" $h="100%">
       <Content>
         <Button
           $w={5.75}
