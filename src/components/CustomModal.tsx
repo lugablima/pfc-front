@@ -41,7 +41,8 @@ export default function CustomModal() {
       style={customStyles}
     >
       <Text>
-        O exercício passou em {modalInfos?.resolution.grade}% dos testes
+        O exercício passou em {modalInfos?.resolution.grade.toFixed(2)}% dos
+        testes
       </Text>
       <Text>Gostaria de enviar a resolução?</Text>
       <ButtonsContainer>

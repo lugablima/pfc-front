@@ -52,7 +52,11 @@ export default function DashboardForStudent() {
           isStudentDashboard
           userNameOrExerciseName={exerciseName}
           exerciseStatus={ex.resolutions.length > 0}
-          porcentage={ex.resolutions.length ? ex.resolutions[0].grade : 0}
+          porcentage={
+            ex.resolutions.length
+              ? Number(ex.resolutions[0].grade.toFixed(2))
+              : 0
+          }
         />
       );
     });

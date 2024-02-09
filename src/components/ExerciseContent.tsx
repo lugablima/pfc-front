@@ -82,6 +82,10 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
       return JSON.parse(exercise.resolutions[0].resolution);
     }
 
+    const hasBooleanType =
+      exercise.tests[0].inputDataType.split(" ")[0] === "bool" ||
+      exercise.tests[0].resultDataType.split(" ")[0] === "bool";
+
     const inputDataType =
       exercise.tests[0].inputDataType.split(" ")[1] === "array"
         ? `${
@@ -89,11 +93,11 @@ export default function ExerciseContent({ exercise }: IExerciseContenProps) {
           } array[], size_t arrayLength`
         : `${exercise.tests[0].inputDataType.split(" ")[0]} param`;
 
-    const defaultCode = `#include <stdio.h>\n\n${
-      exercise.tests[0].resultDataType.split(" ")[0]
-    } ${_.camelCase(
+    const defaultCode = `#include <stdio.h>\n${
+      hasBooleanType ? "#include <stdbool.h>\n\n" : "\n"
+    }${exercise.tests[0].resultDataType.split(" ")[0]} ${_.camelCase(
       exercise.name,
-    )}(${inputDataType}) {\n// Escreva o código aqui\n}`;
+    )}(${inputDataType}) {\n\t// Escreva o código aqui\n}`;
 
     return defaultCode;
   };
