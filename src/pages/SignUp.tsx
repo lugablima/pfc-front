@@ -14,6 +14,7 @@ import emailIcon from "../assets/images/email-icon.svg";
 import lockIcon from "../assets/images/lock-icon.svg";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import { signInUserOrFail, signUpUserOrFail } from "../services/authService";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export interface ISignUpUser {
   name: string;
@@ -27,6 +28,7 @@ export default function SignUp() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const { user, setUser } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
 
   useEffect(() => {
     if (user) navigate("/modules");
@@ -42,6 +44,7 @@ export default function SignUp() {
     };
 
     try {
+      showLoader();
       await signUpUserOrFail(body);
 
       const userData = await signInUserOrFail({ email, password });
@@ -52,6 +55,8 @@ export default function SignUp() {
       setUser(userData);
     } catch (error) {
       alert(error);
+    } finally {
+      hideLoader();
     }
   }
 

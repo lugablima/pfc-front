@@ -13,6 +13,7 @@ import emailIcon from "../assets/images/email-icon.svg";
 import lockIcon from "../assets/images/lock-icon.svg";
 import { IUserContext, useUserContext } from "../contexts/UserContext";
 import { signInUserOrFail } from "../services/authService";
+import { ILoaderContext, useLoaderContext } from "../contexts/LoaderContext";
 
 export interface ISignInUser {
   email: string;
@@ -23,6 +24,7 @@ export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { user, setUser } = useUserContext() as IUserContext;
+  const { showLoader, hideLoader } = useLoaderContext() as ILoaderContext;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function SignIn() {
     };
 
     try {
+      showLoader();
       const data = await signInUserOrFail(body);
 
       setUser(data);
@@ -45,6 +48,8 @@ export default function SignIn() {
       setPassword("");
     } catch (error) {
       alert(error);
+    } finally {
+      hideLoader();
     }
   }
 
